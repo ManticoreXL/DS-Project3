@@ -46,6 +46,12 @@ void MatrixGraph::insertEdge(int from, int to, int weight)
 
 bool MatrixGraph::printGraph(ofstream *fout)
 {
+    if(m_Mat == nullptr)
+    {
+        throw "bool MatrixGraph::printGraph(ofstream *fout) - matrix is empty.";
+        return false;
+    }
+
     // display to_vertex of matrix
     *fout << "  ";
     for (int i = 0; i < m_Size; i++)
@@ -60,4 +66,6 @@ bool MatrixGraph::printGraph(ofstream *fout)
             *fout << m_Mat[i][j] << "  ";
         *fout << endl;
     }
+
+    return true;
 }
