@@ -17,22 +17,22 @@
 using namespace std;
 
 class Graph
-{	
+{
 protected:
-	bool m_Type;
+	bool m_Type; // true: directed, false: undirected
 	int m_Size;
 
 public:
 	Graph(bool type, int size);
 	virtual ~Graph();
 
-	bool getType();	
+	bool getType();
 	int getSize();
 
-	virtual void getAdjacentEdges(int vertex, map<int, int>* m) = 0;		
-	virtual void getAdjacentEdgesDirect(int vertex, map<int, int>* m) = 0;	
-	virtual void insertEdge(int from, int to, int weight) = 0;				
-	virtual	bool printGraph(ofstream *fout) = 0;
+	virtual void getAdjacentEdges(int vertex, map<int, int> *m) = 0;
+	virtual void getAdjacentEdgesDirect(int vertex, map<int, int> *m) = 0;
+	virtual void insertEdge(int from, int to, int weight) = 0;
+	virtual bool printGraph(ofstream *fout) = 0;
 };
 
 #endif

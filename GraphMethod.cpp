@@ -18,7 +18,7 @@ bool BFS(Graph* graph, char option, int vertex)
 bool DFS(Graph* graph, char option, int vertex)
 {
    
- }
+}
 
 bool Kruskal(Graph* graph)
 {
