@@ -31,7 +31,19 @@ void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) // Definition of 
 
     if (m_Type == true) // case: directed -> undirected
     {
-        // todo
+        // copy and make opposite direction edge
+        for (int i = 0; i < m_Size; i++)
+        {
+            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
+            {
+                // insert original edge into m
+                m[i].insert(pair<int, int>(it->first, it->second));
+
+                // insert opposite direction edge into m
+                if (m_List[it->first].find(i) != m_List[it->first].end())
+                    m[it->first].insert(pair<int, int>(i, it->second));
+            }
+        }
     }
     else // case 2: undirected -> undirected
     {
@@ -66,7 +78,9 @@ void ListGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m) // Definiti
     {
         for (int i = 0; i < m_Size; i++)
         {
-            // todo
+            // just copy it // remain maintain section
+            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
+                m[i].insert(pair<int, int>(it->first, it->second));
         }
     }
 }

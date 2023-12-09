@@ -19,8 +19,8 @@ using namespace std;
 class Graph
 {
 protected:
-	bool m_Type; // true: directed, false: undirected
-	int m_Size;
+	bool m_Type; // true: matrix graph, false: list graph
+	int m_Size;	 // vertex of graph
 
 public:
 	Graph(bool type, int size);
