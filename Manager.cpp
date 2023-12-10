@@ -35,46 +35,47 @@ void Manager::run(const char* command_txt){
 
 bool Manager::LOAD(const char* filename)
 {
-	
+	return false;
 }
 
 bool Manager::PRINT()	
 {
-
+	return false;
 }
 
 bool Manager::mBFS(char option, int vertex)	
 {
-	
+	return false;
 }
 
 bool Manager::mDFS(char option, int vertex)	
 {
-	
+	return false;
 }
 
 bool Manager::mDIJKSTRA(char option, int vertex)	
 {
-	
+	return false;
 }
 
 bool Manager::mKRUSKAL()
 {
- 	
+	return false;
 }
 
 bool Manager::mBELLMANFORD(char option, int s_vertex, int e_vertex) 
 {
-	
+	return false;
 }
 
 bool Manager::mFLOYD(char option)
 {
-	
+	return false;
 }
 
-bool Manager::mKwoonWoon(int vertex) {
-	
+bool Manager::mKwoonWoon(int vertex) 
+{
+	return false;
 }
 
 void Manager::printErrorCode(int n)

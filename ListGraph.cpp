@@ -20,76 +20,36 @@ ListGraph::~ListGraph()
         delete[] kw_graph;
 }
 
-// get undirected graph list
+// get undirected adjacent edges at vertex
 void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) // Definition of getAdjacentEdges(No Direction == Undirected)
 {
-    if (m_List == nullptr)
+    if (m_List == nullptr || vertex < 0 || vertex >= m_Size)
     {
-        throw "void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) - list is empty.";
+        throw "void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) - invalid parameter.";
         return;
     }
 
-    if (m_Type == true) // case: directed -> undirected
-    {
-        // copy and make opposite direction edge
-        for (int i = 0; i < m_Size; i++)
-        {
-            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
-            {
-                // insert original edge into m
-                m[i].insert(pair<int, int>(it->first, it->second));
-
-                // insert opposite direction edge into m
-                if (m_List[it->first].find(i) != m_List[it->first].end())
-                    m[it->first].insert(pair<int, int>(i, it->second));
-            }
-        }
-    }
-    else // case 2: undirected -> undirected
-    {
-        // just copy it
-        for (int i = 0; i < m_Size; i++)
-        {
-            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
-                m[i].insert(pair<int, int>(it->first, it->second));
-        }
-    }
+    *m = m_List[vertex - 1];
 }
 
-// get directed graph list
+// get directed adjacent edges at vertex
 void ListGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m) // Definition of getAdjacentEdges(Directed graph)
 {
-    if (m_List == nullptr)
+    if (m_List == nullptr || vertex < 0 || vertex >= m_Size)
     {
-        throw "void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) - list is empty.";
+        throw "void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) - invalid parameter.";
         return;
     }
 
-    if (m_Type == true) // case: directed -> directed
-    {
-        for (int i = 0; i < m_Size; i++)
-        {
-            // just copy it
-            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
-                m[i].insert(pair<int, int>(it->first, it->second));
-        }
-    }
-    else // case 2: undirected -> directed
-    {
-        for (int i = 0; i < m_Size; i++)
-        {
-            // just copy it // remain maintain section
-            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
-                m[i].insert(pair<int, int>(it->first, it->second));
-        }
-    }
+    *m = m_List[vertex - 1];
 }
 
+// insert new edge into m_List
 void ListGraph::insertEdge(int from, int to, int weight) // Definition of insertEdge
 {
-    if (m_List == nullptr)
+    if (m_List == nullptr || from < 0 || from >= m_Size || to < 0 || to >= m_Size)
     {
-        throw "void ListGraph::insertEdge(int from, int to, int weight) - list is empty.";
+        throw "void ListGraph::insertEdge(int from, int to, int weight) - invalid parameter.";
         return;
     }
 
@@ -97,6 +57,7 @@ void ListGraph::insertEdge(int from, int to, int weight) // Definition of insert
     m_List[from - 1].insert(pair<int, int>(to, weight));
 }
 
+// print list graph
 bool ListGraph::printGraph(ofstream *fout) // Definition of print Graph
 {
     if (m_List == nullptr)
@@ -108,7 +69,7 @@ bool ListGraph::printGraph(ofstream *fout) // Definition of print Graph
     for (int i = 0; i < m_Size; i++)
     {
         // print from vertex
-        *fout << i << "-> " << endl;
+        *fout << i+1 << "-> ";
 
         // print adjacency list's item
         for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)

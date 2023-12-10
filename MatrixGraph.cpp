@@ -28,6 +28,7 @@ MatrixGraph::~MatrixGraph()
     }
 }
 
+// get undirected adjacent edges at vertex
 void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> *m)
 {
     if (m_Mat == nullptr)
@@ -36,30 +37,13 @@ void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> *m)
         return;
     }
 
-    if (m_Type == true) // case 1: directed -> undirected
-    {
-        // copy only under diagonal
-        for (int i = 0; i < m_Size; i++)
-        {
-            for (int j = 0; j < i; j++)
-            {
-                // no edge but opposite direction edge is existing
-                if (m_Mat[i][j] == 0 || m_Mat[j][i] != 0)
-                    m[i].insert(pair<int, int>(j, m_Mat[j][i]));
-                else // insert edge
-                    m[i].insert(pair<int, int>(j, m_Mat[i][j]));
-            }
-        }
-    }
-    else // case 2: undirected -> undirected
-    {
-        // just copy it
-        for (int i = 0; i < m_Size; i++)
-            for (int j = 0; j < m_Size; j++)
-                m[i].insert(pair<int, int>(j, m_Mat[i][j]));
-    }
+    // insert adjacent edges into map
+    for (int i = 0; i < m_Size; i++)
+        if (m_Mat[vertex - 1][i] != -1)
+            m->insert(pair<int, int>(vertex - 1, m_Mat[vertex - 1][i]));
 }
 
+// get directed adjacent edges at vertex
 void MatrixGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m)
 {
     if (m_Mat == nullptr)
@@ -68,22 +52,13 @@ void MatrixGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m)
         return;
     }
 
-    if (m_Type == true) // case 1: directed -> directed
-    {
-        // just copy it
-        for (int i = 0; i < m_Size; i++)
-            for (int j = 0; j < m_Size; j++)
-                m[i].insert(pair<int, int>(j, m_Mat[i][j]));
-    }
-    else // case 2: undirected -> directed
-    {
-        // copy under the diagonal
-        for (int i = 0; i < m_Size; i++)
-            for (int j = 0; j < i; j++)
-                m[i].insert(pair<int, int>(j, m_Mat[i][j]));
-    }
+    // insert adjacent edges into map
+    for (int i = 0; i < m_Size; i++)
+        if (m_Mat[vertex - 1][i] != -1)
+            m->insert(pair<int, int>(vertex - 1, m_Mat[vertex - 1][i]));
 }
 
+// insert new edge into m_Mat
 void MatrixGraph::insertEdge(int from, int to, int weight)
 {
     if (from - 1 > m_Size || to - 1 > m_Size)
@@ -95,6 +70,7 @@ void MatrixGraph::insertEdge(int from, int to, int weight)
     m_Mat[from - 1][to - 1] = weight;
 }
 
+// print matrix graph
 bool MatrixGraph::printGraph(ofstream *fout)
 {
     if (m_Mat == nullptr)
