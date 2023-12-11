@@ -19,11 +19,12 @@ public:
 	bool PRINT();	
 	bool mBFS(char option, int vertex);	
 	bool mDFS(char option, int vertex);	
-	bool mDIJKSTRA(char option, int vertex);	
-	bool mKRUSKAL();	
+	bool mKWANGWOON(int vertex);	
+	bool mKRUSKAL();
+	bool mDIJKSTRA(char option, int vertex);
 	bool mBELLMANFORD(char option, int s_vertex, int e_vertex);	
 	bool mFLOYD(char option); 
-	bool mKwoonWoon(int vertex);
+	void printSuccessCode(string cmd);
 	void printErrorCode(int n); 
 };
 

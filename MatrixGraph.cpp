@@ -7,12 +7,12 @@
 MatrixGraph::MatrixGraph(bool type, int size) : Graph(type, size)
 {
     // dynamic allocation of adjacent matrix
-    m_Mat = new int *[size];
-    for (int i = 0; i < size; i++)
+    m_Mat = new int* [size + 1];
+    for (int i = 0; i < size + 1; i++)
     {
-        m_Mat[i] = new int[size];
-        for (int j = 0; j < size; j++)
-            m_Mat[i][j] = -1; // initialize by 0 (no edge)
+        m_Mat[i] = new int[size + 1];
+        for (int j = 0; j < size + 1; j++)
+            m_Mat[i][j] = 0; // initialize by 0 (no edge)
     }
 }
 
@@ -22,7 +22,7 @@ MatrixGraph::~MatrixGraph()
     if (m_Mat)
     {
         // delete 2D array
-        for (int i = 0; i < m_Size; i++)
+        for (int i = 0; i < m_Size + 1; i++)
             delete[] m_Mat[i];
         delete[] m_Mat;
     }
@@ -33,14 +33,14 @@ void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> *m)
 {
     if (m_Mat == nullptr)
     {
-        throw "void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> *m) - matrix is empty";
+        throw "void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> *m) - graph is empty.";
         return;
     }
 
     // insert adjacent edges into map
-    for (int i = 0; i < m_Size; i++)
-        if (m_Mat[vertex - 1][i] != -1)
-            m->insert(pair<int, int>(vertex - 1, m_Mat[vertex - 1][i]));
+    for (int i = 1; i < m_Size+1; i++)
+        if (m_Mat[vertex][i] != 0)
+            m->insert(pair<int, int>(i, m_Mat[vertex][i]));
 }
 
 // get directed adjacent edges at vertex
@@ -48,26 +48,26 @@ void MatrixGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m)
 {
     if (m_Mat == nullptr)
     {
-        throw "void MatrixGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m) - matrix is empty";
+        throw "void MatrixGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m) - graph is empty.";
         return;
     }
 
     // insert adjacent edges into map
-    for (int i = 0; i < m_Size; i++)
-        if (m_Mat[vertex - 1][i] != -1)
-            m->insert(pair<int, int>(vertex - 1, m_Mat[vertex - 1][i]));
+    for (int i = 1; i < m_Size + 1; i++)
+        if (m_Mat[vertex][i] != 0)
+            m->insert(pair<int, int>(i, m_Mat[vertex][i]));
 }
 
 // insert new edge into m_Mat
 void MatrixGraph::insertEdge(int from, int to, int weight)
 {
-    if (from - 1 > m_Size || to - 1 > m_Size)
+    if (from > m_Size || to > m_Size)
     {
         throw "void MatrixGraph::insertEdge(int from, int to, int weight) - out of range";
         return;
     }
     // set (from, to) = weight
-    m_Mat[from - 1][to - 1] = weight;
+    m_Mat[from][to] = weight;
 }
 
 // print matrix graph
@@ -81,15 +81,15 @@ bool MatrixGraph::printGraph(ofstream *fout)
 
     // display to_vertex of matrix
     *fout << "  ";
-    for (int i = 0; i < m_Size; i++)
-        *fout << " [" << i + 1 << "] ";
+    for (int i = 1; i < m_Size + 1; i++)
+        *fout << "[" << i << "] ";
     *fout << endl;
 
     // display from_vertex and adjaceny matrix
-    for (int i = 0; i < m_Size; i++)
+    for (int i = 1; i < m_Size+1; i++)
     {
-        *fout << "[" << i + 1 << "] ";
-        for (int j = 0; j < m_Size; j++)
+        *fout << "[" << i << "] ";
+        for (int j = 1; j < m_Size + 1; j++)
             *fout << m_Mat[i][j] << "  ";
         *fout << endl;
     }

@@ -142,6 +142,9 @@
     <ClInclude Include="MatrixGraph.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="command.txt" />
+    <Text Include="graph_L.txt" />
+    <Text Include="graph_M.txt" />
     <Text Include="log.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

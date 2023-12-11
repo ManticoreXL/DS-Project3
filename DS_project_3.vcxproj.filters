@@ -55,5 +55,14 @@
     <Text Include="log.txt">
       <Filter>리소스 파일</Filter>
     </Text>
+    <Text Include="graph_L.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="graph_M.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="command.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
   </ItemGroup>
 </Project>

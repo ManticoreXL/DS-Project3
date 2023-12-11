@@ -7,11 +7,10 @@
 #include <set>
 #include <list>
 #include <utility>
-
 using namespace std;
 
 // breadth first search
-bool BFS(Graph *graph, char option, int vertex)
+bool BFS(Graph* graph, char option, int vertex)
 {
     if (graph == nullptr)
     {
@@ -20,7 +19,7 @@ bool BFS(Graph *graph, char option, int vertex)
     }
 
     // get size of graph
-    int size = graph->getSize();
+    int size = graph->getSize() + 1;
     if (vertex >= size)
     {
         throw "bool BFS(Graph *graph, char option, int vertex) - invalid vertex.";
@@ -31,7 +30,7 @@ bool BFS(Graph *graph, char option, int vertex)
     ofstream fout("log.txt", ios::app);
 
     // create visit list
-    bool *visited = new bool[size];
+    bool* visited = new bool[size];
     for (int i = 0; i < size; i++)
         visited[i] = false;
 
@@ -39,9 +38,6 @@ bool BFS(Graph *graph, char option, int vertex)
     queue<int> q;
     q.push(vertex);
     visited[vertex] = true;
-
-    // print start vertex
-    fout << "startvertex: " << vertex << endl;
 
     // breadth first search
     while (!q.empty())
@@ -51,7 +47,7 @@ bool BFS(Graph *graph, char option, int vertex)
 
         // print visited vertex
         fout << curr;
-       
+
         // create adjacency list
         map<int, int> edges;
 
@@ -85,12 +81,13 @@ bool BFS(Graph *graph, char option, int vertex)
 
     fout << endl;
 
+    fout.close();
     delete[] visited;
     return true;
 }
 
 // depth first search
-bool DFS(Graph *graph, char option, int vertex)
+bool DFS(Graph* graph, char option, int vertex)
 {
     if (graph == nullptr)
     {
@@ -98,8 +95,8 @@ bool DFS(Graph *graph, char option, int vertex)
         return false;
     }
 
-    int size = graph->getSize();
-    if (size <= vertex)
+    int size = graph->getSize() + 1;
+    if (vertex >= size)
     {
         throw "bool DFS(Graph *graph, char option, int vertex) - vertex is over than size.";
         return false;
@@ -110,95 +107,210 @@ bool DFS(Graph *graph, char option, int vertex)
 
     // create visit list
     bool* visited = new bool[size];
-    for (int i = 0; i < size; i++)
+    for (int i = 1; i < size; i++)
         visited[i] = false;
 
-    // print start vertex
-    fout << "startvertex: " << vertex << endl;
+    // create stack to remember backtracking vertex
+    stack<int> s;
+    s.push(vertex);
 
-    // call DFS recursive function
-    DFSHelper(graph, option, vertex, visited, fout);
+    // counter for printing ->
+    int counter = 0;
 
-    delete[] visited;
+    while (!s.empty())
+    {
+        int curr = s.top();
+        s.pop();
+
+        if (visited[curr] == false)
+        {
+            fout << curr;
+            visited[curr] = true;
+            counter++;
+        }
+        else
+            continue;
+
+        map<int, int> edges;
+
+        // get adjacency edges
+        if (option == 'Y')
+            graph->getAdjacentEdgesDirect(curr, &edges);
+        else if (option == 'N')
+            graph->getAdjacentEdges(curr, &edges);
+        else
+        {
+            throw "bool BFS(Graph *graph, char option, int vertex) - invalid option.";
+            delete[] visited;
+            return false;
+        }
+
+        for (const auto& edge : edges)
+        {
+            int neighbor = edge.first;
+            if (visited[neighbor] == false)
+                s.push(neighbor);
+        }
+
+        // print ->
+        if (!s.empty() && counter < size - 1)
+            fout << " -> ";
+    }
+
     fout << endl;
+
+    fout.close();
+    delete[] visited;
     return true;
 }
 
-// DFS recursive function
-bool DFSHelper(Graph *graph, char option, int vertex, bool* visited, ofstream& fout)
-{
-    visited[vertex - 1] = true;
-    fout << vertex;
-
-    // create adjacency list
-    map<int, int> edges;
-
-    // get adjacency edges
-    if (option == 'Y')
-        graph->getAdjacentEdgesDirect(vertex, &edges);
-    else if(option == 'N')
-        graph->getAdjacentEdges(vertex, &edges);
-    else
-    {
-        throw "bool DFSHelper(Graph *graph, char option, int vertex, bool* visited, ofstream &fout) - invalid option.";
-        delete[] visited;
-        return false;
-    }
-
-    // call recursive DFSHelper edge by edge
-    for (const auto& edge : edges)
-    {
-        int neighbor = edge.first;
-        if (visited[neighbor] == false)
-        {
-            fout << " -> ";
-            DFSHelper(graph, option, neighbor, visited, fout);
-        }
-    }
-}
-
-// kruskal MST generation
-bool Kruskal(Graph *graph)
+// Kruskal MST generation
+bool Kruskal(Graph* graph)
 {
     if (graph == nullptr)
     {
         throw "bool Kruskal(Graph *graph) - invalid graph.";
         return false;
     }
+
+    return true;
 }
 
-bool Dijkstra(Graph *graph, char option, int vertex)
+// Dijkstra
+bool Dijkstra(Graph* graph, char option, int vertex)
 {
     if (graph == nullptr)
     {
         throw "bool Dijkstra(Graph *graph, char option, int vertex) - invalid graph.";
         return false;
     }
+
+    int size = graph->getSize() + 1;
+    if (vertex >= size)
+    {
+        throw "bool DFS(Graph *graph, char option, int vertex) - vertex is over than size.";
+        return false;
+    }
+
+    // open log.txt
+    ofstream fout("log.txt", ios::app);
+
+    // create a priority queue to store vertices with their distances
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+    // create a vector to store distances from the source vertex
+    vector<int> distance(size, INT_MAX);
+    distance[vertex] = 0;
+
+    // create a vector to store the previous vertex on the shortest path
+    vector<int> previous(size, -1);
+
+    // insert source vertex into priority queue
+    pq.push({ 0, vertex });
+
+    while (!pq.empty())
+    {
+        int curr = pq.top().second;
+        int curr_dist = pq.top().first;
+        pq.pop();
+
+        // Skip if this vertex has been processed already
+        if (curr_dist > distance[curr])
+            continue;
+
+        // Create adjacency list
+        map<int, int> edges;
+
+        // Get adjacency edges
+        if (option == 'Y')
+            graph->getAdjacentEdgesDirect(curr, &edges);
+        else if (option == 'N')
+            graph->getAdjacentEdges(curr, &edges);
+        else
+        {
+            throw "bool Dijkstra(Graph *graph, char option, int vertex) - invalid option.";
+            return false;
+        }
+
+        // Relaxation step
+        for (const auto& edge : edges)
+        {
+            int neighbor = edge.first;
+            int weight = edge.second;
+
+            if (distance[curr] + weight < distance[neighbor])
+            {
+                distance[neighbor] = distance[curr] + weight;
+                previous[neighbor] = curr;
+                pq.push({ distance[neighbor], neighbor });
+            }
+        }
+    }
+
+    // Output the result
+    for (int i = 1; i < size; ++i)
+    {
+        if (i == vertex)
+            fout << "[" << i << "]x" << endl;
+        else
+        {
+            fout << "[" << i << "]";
+            // Print the shortest path
+            int prev = i;
+            while (prev != -1)
+            {
+                fout << prev;
+                if (previous[prev] != -1)
+                    fout << " -> ";
+                prev = previous[prev];
+            }
+            fout << " (" << distance[i] << ")" << endl;
+        }
+    }
+
+    fout.close();
+    return true;
 }
 
-bool Bellmanford(Graph *graph, char option, int s_vertex, int e_vertex)
+// BellmanFord
+bool Bellmanford(Graph* graph, char option, int s_vertex, int e_vertex)
 {
     if (graph == nullptr)
     {
         throw "bool Bellmanford(Graph *graph, char option, int s_vertex, int e_vertex) - invalid graph.";
         return false;
     }
+
+    return true;
 }
 
-bool FLOYD(Graph *graph, char option)
+// FLOYD
+bool FLOYD(Graph* graph, char option)
 {
     if (graph == nullptr)
     {
         throw "bool FLOYD(Graph *graph, char option) - invalid graph";
         return false;
     }
+
+    return true;
 }
 
-bool KWANGWOON(Graph *graph, int vertex)
+// KWANGWOON
+bool KWANGWOON(Graph* graph, int vertex)
 {
     if (graph == nullptr)
     {
         throw "bool KWANGWOON(Graph *graph, int vertex) - invalid graph";
         return false;
     }
+
+    int size = graph->getSize() + 1;
+    if (vertex > size)
+    {
+        throw "bool KWANGWOON(Graph* graph, int vertex) - invalid vertex.";
+        return false;
+    }
+
+    return true;
 }

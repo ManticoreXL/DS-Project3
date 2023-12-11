@@ -6,7 +6,6 @@
 
 bool BFS(Graph* graph, char option, int vertex);     
 bool DFS(Graph* graph, char option,  int vertex);
-bool DFSHelper(Graph* graph, char option, int vertex, bool* visited, ofstream& fout);
 bool KWANGWOON(Graph* graph, int vertex);  
 bool Kruskal(Graph* graph);
 bool Dijkstra(Graph* graph, char option, int vertex);    //Dijkstra

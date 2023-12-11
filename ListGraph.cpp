@@ -6,7 +6,7 @@
 ListGraph::ListGraph(bool type, int size) : Graph(type, size)
 {
     // create new m_List and kw_graph
-    m_List = new map<int, int>[size];
+    m_List = new map<int, int>[size + 1];
     kw_graph = new vector<int>;
 }
 
@@ -29,7 +29,7 @@ void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) // Definition of 
         return;
     }
 
-    *m = m_List[vertex - 1];
+    *m = m_List[vertex];
 }
 
 // get directed adjacent edges at vertex
@@ -41,20 +41,20 @@ void ListGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m) // Definiti
         return;
     }
 
-    *m = m_List[vertex - 1];
+    *m = m_List[vertex];
 }
 
 // insert new edge into m_List
 void ListGraph::insertEdge(int from, int to, int weight) // Definition of insertEdge
 {
-    if (m_List == nullptr || from < 0 || from >= m_Size || to < 0 || to >= m_Size)
+    if (m_List == nullptr || from < 0 || from > m_Size || to < 0 || to > m_Size)
     {
         throw "void ListGraph::insertEdge(int from, int to, int weight) - invalid parameter.";
         return;
     }
 
     // insert (from, to)->weight into map
-    m_List[from - 1].insert(pair<int, int>(to, weight));
+    m_List[from].insert(pair<int, int>(to, weight));
 }
 
 // print list graph
@@ -66,10 +66,10 @@ bool ListGraph::printGraph(ofstream *fout) // Definition of print Graph
         return false;
     }
 
-    for (int i = 0; i < m_Size; i++)
+    for (int i = 1; i < m_Size + 1; i++)
     {
         // print from vertex
-        *fout << i+1 << "-> ";
+        *fout << i << "-> ";
 
         // print adjacency list's item
         for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
@@ -79,7 +79,9 @@ bool ListGraph::printGraph(ofstream *fout) // Definition of print Graph
                 *fout << " -> ";
 
             it--; // move back
-            *fout << endl;
         }
+        *fout << endl;
     }
+
+    return true;
 }
