@@ -23,19 +23,32 @@ ListGraph::~ListGraph()
 // get undirected adjacent edges at vertex
 void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) // Definition of getAdjacentEdges(No Direction == Undirected)
 {
-    if (m_List == nullptr || vertex < 0 || vertex >= m_Size)
+    if (m_List == nullptr || vertex < 0 || vertex > m_Size)
     {
         throw "void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) - invalid parameter.";
         return;
     }
 
-    *m = m_List[vertex];
+    for (int i = 1; i < m_Size + 1; i++)
+    {
+        if (i == vertex) // add original edges
+        {
+            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
+                m->insert(pair<int, int>(it->first, it->second));
+        }
+        else // add opposite direction edges
+        {
+            for (auto it = m_List[i].begin(); it != m_List[i].end(); it++)
+                if (it->first == vertex)
+                    m->insert(pair<int, int>(vertex, it->second));
+        }
+    }
 }
 
 // get directed adjacent edges at vertex
 void ListGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m) // Definition of getAdjacentEdges(Directed graph)
 {
-    if (m_List == nullptr || vertex < 0 || vertex >= m_Size)
+    if (m_List == nullptr || vertex < 0 || vertex > m_Size)
     {
         throw "void ListGraph::getAdjacentEdges(int vertex, map<int, int> *m) - invalid parameter.";
         return;

@@ -38,9 +38,19 @@ void MatrixGraph::getAdjacentEdges(int vertex, map<int, int> *m)
     }
 
     // insert adjacent edges into map
-    for (int i = 1; i < m_Size+1; i++)
-        if (m_Mat[vertex][i] != 0)
-            m->insert(pair<int, int>(i, m_Mat[vertex][i]));
+    for (int i = 1; i < m_Size + 1; i++)
+    {
+        if (i == vertex) // add original edges
+        {
+            if (m_Mat[vertex][i] != 0)
+                m->insert(pair<int, int>(i, m_Mat[vertex][i]));
+        }
+        else // add opposite direction edges
+        {
+            if (m_Mat[i][vertex] != 0)
+                m->insert(pair<int, int>(i, m_Mat[i][vertex]));
+        }
+    }
 }
 
 // get directed adjacent edges at vertex
