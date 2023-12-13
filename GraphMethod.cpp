@@ -164,11 +164,13 @@ bool DFS(Graph* graph, char option, int vertex)
     return true;
 }
 
+// disjoint sets type
 struct DisjointSet {
     int parent;
     int rank;
 };
 
+// find operation
 int findSets(DisjointSet* sets, int i)
 {
     if (sets[i].parent != i)
@@ -176,6 +178,7 @@ int findSets(DisjointSet* sets, int i)
     return sets[i].parent;
 }
 
+// union operation
 void unionSets(DisjointSet* sets, int x, int y)
 {
     int rootX = findSets(sets, x);
@@ -253,6 +256,7 @@ bool Kruskal(Graph* graph)
             if (from == i && findSets(sets, from) != findSets(sets, to))
             {
                 fout << to << "(" << weight << ") ";
+                unionSets(sets, from, to);
                 cost += weight;
             }
         }
@@ -264,7 +268,6 @@ bool Kruskal(Graph* graph)
     delete[] sets;
     return true;
 }
-
 
 // Dijkstra
 bool Dijkstra(Graph* graph, char option, int vertex)
