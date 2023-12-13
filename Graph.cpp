@@ -3,7 +3,7 @@
 // constructor of Graph
 Graph::Graph(bool type, int size)
 {
-	m_Type = type;
+	m_Type = type; // true: matrix, false: list
 	m_Size = size;
 }
 

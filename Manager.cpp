@@ -43,14 +43,15 @@ void Manager::run(const char* command_txt){
 		{
 			string filename;
 			getline(ss, filename, '\r');
-			if (LOAD(filename.c_str()))
-				printSuccessCode("LOAD");
-			else
+			if (!LOAD(filename.c_str()))
 				printErrorCode(100);
+			else
+				printSuccessCode("LOAD");
 		}
 		else if (cmd == "PRINT")
 		{
-			PRINT();
+			if (!PRINT())
+				printErrorCode(200);
 		}
 		else if (cmd == "BFS")
 		{
@@ -61,7 +62,8 @@ void Manager::run(const char* command_txt){
 			if (option == "" || vertex == "")
 				printErrorCode(300);
 			else
-				mBFS(option[0], stoi(vertex));
+				if (!mBFS(option[0], stoi(vertex)))
+					printErrorCode(300);
 		}
 		else if (cmd == "DFS")
 		{
@@ -72,20 +74,18 @@ void Manager::run(const char* command_txt){
 			if (option == "" || vertex == "")
 				printErrorCode(400);
 			else
-				mDFS(option[0], stoi(vertex));	
+				if (!mDFS(option[0], stoi(vertex)))
+					printErrorCode(400);
 		}
 		else if (cmd == "KWANGWOON")
 		{
-			string vertex;
-			getline(ss, vertex, '\r');
-			if (vertex == "")
+			if (!mKWANGWOON(1))
 				printErrorCode(500);
-			else
-				mKWANGWOON(stoi(vertex));
 		}
 		else if (cmd == "KRUSKAL")
 		{
-			mKRUSKAL();
+			if (!mKRUSKAL())
+				printErrorCode(600);
 		}
 		else if (cmd == "DIJKSTRA")
 		{
@@ -96,7 +96,8 @@ void Manager::run(const char* command_txt){
 			if (option == "" || vertex == "")
 				printErrorCode(700);
 			else
-				mDIJKSTRA(option[0], stoi(vertex));
+				if (!mDIJKSTRA(option[0], stoi(vertex)))
+					printErrorCode(700);
 			
 		}
 		else if (cmd == "BELLMANFORD")
@@ -109,7 +110,8 @@ void Manager::run(const char* command_txt){
 			if (option == "" || start == "" || end == "")
 				printErrorCode(800);
 			else
-				mBELLMANFORD(option[0], stoi(start), stoi(end));
+				if (!mBELLMANFORD(option[0], stoi(start), stoi(end)))
+					printErrorCode(800);
 		}
 		else if (cmd == "FLOYD")
 		{
@@ -119,7 +121,8 @@ void Manager::run(const char* command_txt){
 			if (option == "")
 				printErrorCode(900);
 			else
-				mFLOYD(option[0]);
+				if (!mFLOYD(option[0]))
+					printErrorCode(900);
 		}
 		else if (cmd == "EXIT")
 		{
@@ -231,6 +234,9 @@ bool Manager::LOAD(const char* filename)
 		printErrorCode(100);
 	}
 
+	// increase load indicator by 1
+	load = load + 1;
+
 	return true;
 }
 
@@ -309,6 +315,12 @@ bool Manager::mKWANGWOON(int vertex)
 {
 	try
 	{
+		if (graph->getType() == true)
+		{
+			throw"bool Manager::mKWANGWOON(int vertex) - matrix graph cannot execute KWANGWOON.";
+			return false;
+		}
+
 		fout << "======== KWANGWOON========" << endl;
 		fout << "startvertex: " << vertex << endl;
 		// call KWANGWOON method

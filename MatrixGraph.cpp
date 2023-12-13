@@ -68,6 +68,12 @@ void MatrixGraph::getAdjacentEdgesDirect(int vertex, map<int, int> *m)
             m->insert(pair<int, int>(i, m_Mat[vertex][i]));
 }
 
+void MatrixGraph::getKwGraphEdges(int vertex, vector<int>* m)
+{
+    throw"void MatrixGraph::getKwGraphEdges(int vertex, vector<int>* m) - matrix graph cannot execute KWANGWOON.";
+    return;
+}
+
 // insert new edge into m_Mat
 void MatrixGraph::insertEdge(int from, int to, int weight)
 {
@@ -90,7 +96,7 @@ bool MatrixGraph::printGraph(ofstream *fout)
     }
 
     // display to_vertex of matrix
-    *fout << "  ";
+    *fout << "   ";
     for (int i = 1; i < m_Size + 1; i++)
         *fout << "[" << i << "] ";
     *fout << endl;
@@ -100,7 +106,7 @@ bool MatrixGraph::printGraph(ofstream *fout)
     {
         *fout << "[" << i << "] ";
         for (int j = 1; j < m_Size + 1; j++)
-            *fout << m_Mat[i][j] << "  ";
+            *fout << m_Mat[i][j] << "   ";
         *fout << endl;
     }
 
